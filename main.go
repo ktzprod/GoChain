@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"gochain/model"
+	"strconv"
 )
 
 func main() {
@@ -15,6 +16,9 @@ func main() {
 		fmt.Printf("previous block hash: %x\n", block.PrevHash)
 		fmt.Printf("data: %s\n", block.Data)
 		fmt.Printf("hash: %x\n", block.Hash)
+
+		pow := model.CreateProofOfWork(block)
+		fmt.Printf("PoW: %s\n", strconv.FormatBool(pow.Validate()))
 		fmt.Println()
 	}
 }
