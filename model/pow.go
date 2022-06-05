@@ -17,6 +17,7 @@ type ProofOfWork struct {
 	target *big.Int
 }
 
+// create a Proof of work instance
 func CreateProofOfWork(b *Block) *ProofOfWork {
 	target := big.NewInt(1)
 	target.Lsh(target, uint(256-targetsBits))
@@ -36,6 +37,7 @@ func (p *ProofOfWork) prepareData(nonce int) []byte {
 	)
 }
 
+// Mine a block given the block itself and the target hash
 func (p *ProofOfWork) Run() (int, []byte) {
 	var hashInt big.Int
 	var hash [32]byte
@@ -59,6 +61,7 @@ func (p *ProofOfWork) Run() (int, []byte) {
 	return nonce, hash[:]
 }
 
+// validate that this proof of work is actually related to the given block
 func (p *ProofOfWork) Validate() bool {
 	var hashInt big.Int
 

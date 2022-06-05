@@ -13,12 +13,14 @@ type CLI struct {
 	Chain *model.Blockchain
 }
 
+// print how to use this command line
 func (cli *CLI) printUsage() {
 	fmt.Println("Usage:")
 	fmt.Println("  addblock -data BLOCK_DATA - add a block to the blockchain")
 	fmt.Println("  printchain - print all the blocks of the blockchain")
 }
 
+// validate arguments
 func (cli *CLI) validateArgs() {
 	if len(os.Args) < 2 {
 		cli.printUsage()
@@ -26,11 +28,13 @@ func (cli *CLI) validateArgs() {
 	}
 }
 
+// create a new block in the blockchain
 func (cli *CLI) addBlock(data string) {
 	cli.Chain.AddBlock(data)
 	fmt.Println("Success!")
 }
 
+// print the current content of the blockchain
 func (cli *CLI) printChain() {
 	bci := cli.Chain.Iterator()
 
@@ -50,6 +54,7 @@ func (cli *CLI) printChain() {
 	}
 }
 
+// run the command line
 func (cli *CLI) Run() {
 	cli.validateArgs()
 

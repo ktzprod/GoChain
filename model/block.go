@@ -3,27 +3,29 @@ package model
 import (
 	"bytes"
 	"encoding/gob"
-	"fmt"
+	"log"
 	"time"
 )
 
 type Block struct {
-	Timestamp int64
-	Data      []byte
-	PrevHash  []byte
-	Hash      []byte
-	Nonce     int
+	Timestamp int64  // when the block has been created
+	Data      []byte // data of the block
+	PrevHash  []byte // hash of the previous block in the blockchain
+	Hash      []byte // has of the current block
+	Nonce     int    // nonce
 }
 
+// Serialize a block
 func (b *Block) Serialize() []byte {
 	var serialized bytes.Buffer
 	encoder := gob.NewEncoder(&serialized)
 	if err := encoder.Encode(b); err != nil {
-		fmt.Printf("Failed to serialize block: %s\n", err)
+		log.Panic(err)
 	}
 	return serialized.Bytes()
 }
 
+// Create a new block
 func CreateBlock(data string, prevBlockHash []byte) *Block {
 	block := &Block{time.Now().Unix(), []byte(data), prevBlockHash, []byte{}, 0}
 	pow := CreateProofOfWork(block)
@@ -35,13 +37,13 @@ func CreateBlock(data string, prevBlockHash []byte) *Block {
 	return block
 }
 
+// Deserialize a block
 func DeserializeBlock(d []byte) *Block {
 	var block Block
 
 	decoder := gob.NewDecoder(bytes.NewReader(d))
 	if err := decoder.Decode(&block); err != nil {
-		fmt.Printf("Failed to deserialize block: %s\n", err)
-		return nil
+		log.Panic(err)
 	}
 
 	return &block

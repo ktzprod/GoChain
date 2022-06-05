@@ -11,15 +11,16 @@ var dbFile = "gochain.db"
 const blocksBucket = "blocks"
 
 type Blockchain struct {
-	tip []byte
-	db  *bolt.DB
+	tip []byte   // the last block hash
+	db  *bolt.DB // the database descriptor
 }
 
 type BlockchainIterator struct {
-	currentHash []byte
-	db          *bolt.DB
+	currentHash []byte   // the current block hash
+	db          *bolt.DB // the database descriptor
 }
 
+// add a new block in the blockchain database
 func (bc *Blockchain) AddBlock(data string) {
 	var lastHash []byte
 
@@ -53,15 +54,19 @@ func (bc *Blockchain) AddBlock(data string) {
 	})
 }
 
+// close the database
 func (bc *Blockchain) Close() {
 	bc.db.Close()
 }
 
+// create an iterator on the blockchain. Iterators goes from
+// the latest block mint to the oldest one
 func (bc *Blockchain) Iterator() *BlockchainIterator {
 	bci := &BlockchainIterator{bc.tip, bc.db}
 	return bci
 }
 
+// go to the next block
 func (i *BlockchainIterator) Next() *Block {
 	var block *Block
 
@@ -82,10 +87,12 @@ func (i *BlockchainIterator) Next() *Block {
 	return block
 }
 
+// create the first block of the blockchain
 func CreateGenesisBlock() *Block {
 	return CreateBlock("Genesis Block", []byte{})
 }
 
+// create a instance of the blockchain
 func CreateBlockchain() *Blockchain {
 	var tip []byte
 	db, err := bolt.Open(dbFile, 0600, nil)
